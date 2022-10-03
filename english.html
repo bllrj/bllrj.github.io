@@ -38,7 +38,7 @@ const app = {
   methods: {
     f(){
         axios
-        .get('resource/m.json')
+        .get('resource/english/2000.json')
         .then(response => {
             this.words = response.data;
             var index = Math.floor((Math.random()*this.words.length));
