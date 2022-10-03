@@ -65,7 +65,7 @@ const app = {
                 this.text = ""
                 this.isShow = true
                 document.getElementById("inputName").focus()
-                var read_text = new SpeechSynthesisUtterance(_this.thisWord.original); // 实例化
+                var read_text = new SpeechSynthesisUtterance(this.thisWord.original); // 实例化
                 sound.speak(read_text); // 朗读
             }
         },
