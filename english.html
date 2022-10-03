@@ -40,13 +40,13 @@ const app = {
         axios
         .get('resource/m.json')
         .then(response => {
-            this.words = response
+            this.words = response.data;
             var index = Math.floor((Math.random()*this.words.length));
-            this.thisWord = this.words[index]
+            this.thisWord = this.words[index];
             var sound = window.speechSynthesis; // 定义局部变量
             var read_text = new SpeechSynthesisUtterance(this.thisWord.original); // 实例化
             sound.speak(read_text); // 朗读
-            document.getElementById("inputName").focus()
+            document.getElementById("inputName").focus();
         }).catch(function (error) { // 请求失败处理
             console.log(error);
         });
