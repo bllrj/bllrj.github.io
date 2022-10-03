@@ -62,9 +62,8 @@ const app = {
                 this.isShow = false
                 var index = Math.floor((Math.random()*this.words.length));
                 this.thisWord = this.words[index]
-                var _this = this;
-                _this.text = ""
-                _this.isShow = true
+                this.text = ""
+                this.isShow = true
                 document.getElementById("inputName").focus()
                 var read_text = new SpeechSynthesisUtterance(_this.thisWord.original); // 实例化
                 sound.speak(read_text); // 朗读
@@ -74,7 +73,7 @@ const app = {
     }
   },
   mounted() {
-    this.f()
+    this.f();
   }
 }
 Vue.createApp(app).mount('#app')
