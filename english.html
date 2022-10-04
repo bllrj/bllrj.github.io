@@ -51,6 +51,7 @@ const app = {
   },
   methods: {
     changeItem(){
+        localStorage.setItem("url",this.selectItem)
         this.f()
     },
     f(){
@@ -90,6 +91,9 @@ const app = {
     }
   },
   mounted() {
+    if(localStorage.getItem("url") != null){
+        this.selectItem = localStorage.getItem("url")
+    }
     this.f();
   }
 }
