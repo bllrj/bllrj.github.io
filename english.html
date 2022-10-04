@@ -13,8 +13,16 @@ body{
 </head>
 <body>
 <div id="app" class="demo">
+    <header>
+        <strong>巴啦啦英语</strong>
+        <select style="float:right" v-model="selectItem" @change="changeItem($event)">
+            <option v-for="(options,id) in itemList" :key="id" :value="options.url">
+                {{options.title}}
+            </option>
+        </select>
+    </header>
     <div v-if="isShow" style="width: 600px;margin: auto;margin-top: 200px;text-align: center;">
-        <p v-if="i%2==0" style="font-size: 40px;margin: 0px;">{{ thisWord.original }}</p>
+        <p v-if="i%2==0" style="font-size: 40px;margin: 0px;">{{ thisWord.original }}&nbsp;</p>
         <p v-if="i%2!=0" style="font-size: 40px;margin: 0px;">{{ thisWord.translation }}</p>
         <p><input style="text-align:center;font-size: 40px;outline: -webkit-focus-ring-color auto 1px;" v-model="text" id="inputName"></p>
         <p v-if="i%2==0" style="font-size: 40px;margin: 0px;">{{ thisWord.translation }}</p>
@@ -25,6 +33,12 @@ body{
 const app = {
   data() {
     return {
+        selectItem:'http://bllrj.github.io/resource/english/2000.json',
+        itemList:[
+            {id:1,title:"2000",url:'http://bllrj.github.io/resource/english/2000.json'},
+            {id:2,title:"5000",url:'http://bllrj.github.io/resource/english/5000.json'},
+            {id:3,title:"6000",url:'http://bllrj.github.io/resource/english/6000.json'}
+        ],
         i:0,
         thisWord:{
             original:"",
@@ -36,9 +50,12 @@ const app = {
     }
   },
   methods: {
+    changeItem(){
+        this.f()
+    },
     f(){
         axios
-        .get('resource/english/2000.json')
+        .get(this.selectItem)
         .then(response => {
             this.words = response.data;
             var index = Math.floor((Math.random()*this.words.length));
