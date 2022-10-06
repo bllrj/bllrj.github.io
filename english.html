@@ -34,11 +34,11 @@ body{
 const app = {
   data() {
     return {
-        selectItem:'https://bllrj.cn/resource/english/2000.json',
+        selectItem:'/resource/english/2000.json',
         itemList:[
-            {id:1,title:"2000单词",url:'https://bllrj.cn/resource/english/2000.json'},
-            {id:2,title:"4000单词",url:'https://bllrj.cn/resource/english/4000.json'},
-            {id:3,title:"6000单词",url:'https://bllrj.cn/resource/english/6000.json'}
+            {id:1,title:"2000单词",url:'/resource/english/2000.json'},
+            {id:2,title:"4000单词",url:'/resource/english/4000.json'},
+            {id:3,title:"6000单词",url:'/resource/english/6000.json'}
         ],
         i:0,
         c:0,
@@ -57,8 +57,10 @@ const app = {
         this.f()
     },
     f(){
-        axios
-        .get(this.selectItem)
+        axios({
+            method: 'GET',
+            url:this.selectItem,
+        })
         .then(response => {
             this.words = response.data;
             var index = Math.floor((Math.random()*this.words.length));
