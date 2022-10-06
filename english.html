@@ -28,6 +28,7 @@ body{
         <p v-if="i%2==0" style="font-size: 40px;margin: 0px;">{{ thisWord.translation }}</p>
         <p v-if="i%2!=0"  style="font-size: 40px;margin: 0px;">{{ thisWord.original }}</p>
     </div>
+    <p style=" position: absolute;bottom: 0;margin-bottom: 5px;">今天已学习：{{c}}</p>
 </div>
 <script>
 const app = {
@@ -40,6 +41,7 @@ const app = {
             {id:3,title:"6000单词",url:'https://bllrj.cn/resource/english/6000.json'}
         ],
         i:0,
+        c:0,
         thisWord:{
             original:"",
             translation:""
@@ -76,6 +78,8 @@ const app = {
             let a = true;
             if(newValue == this.thisWord.original){
                 this.i += 1
+                this.c += 1
+                localStorage.setItem("c",this.c)
                 var sound = window.speechSynthesis; // 定义局部变量
                 this.isShow = false
                 var index = Math.floor((Math.random()*this.words.length));
@@ -93,6 +97,9 @@ const app = {
   mounted() {
     if(localStorage.getItem("url") != null){
         this.selectItem = localStorage.getItem("url")
+    }
+    if(localStorage.getItem("c") != null){
+        this.selectItem = localStorage.getItem("c")
     }
     this.f();
   }
