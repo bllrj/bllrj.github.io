@@ -105,7 +105,7 @@ const app = {
         this.selectItem = localStorage.getItem("url")
     }
     if(localStorage.getItem("c") != null){
-        this.c = localStorage.getItem("c")
+        this.c = parseInt(localStorage.getItem("c"))
     }
     this.f();
   }
