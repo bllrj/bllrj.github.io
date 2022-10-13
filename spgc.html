@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>巴啦啦.视频工厂</title>
+    <script src="https://cdn.staticfile.org/vue/3.2.36/vue.global.min.js"></script>
+    <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
+    <style>
+        button{
+            width: 100%;
+            background: #f1efeb;
+            border: 1px solid rgb(160, 160, 160);
+            
+        }
+        button:hover{
+            background: #e0dfdd;
+        }
+        button:active{
+            background: #cfcac1;
+        }
+        body{
+            background: #cfcac1;
+        }
+        input{
+            background: #f1efeb;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <input type="file" ref="file">
+        <table style="margin:auto;width: 100%;max-width: 1200px;" border="1">
+            <tr>
+                <td>媒体</td>
+                <td>文本</td>
+                <td>设置</td>
+                <td>操作</td>
+            </tr>
+            <tr v-for="(item,index) in vData" style="height: 200px;">
+                <td width="200px" @click="selectFile(item)">点击选择媒体文件，可选择视频，图片
+                    <img style="width: 100%;" :src="item.imageUrl">
+                </td>
+                <td>
+                    <textarea style="width:100%;height:200px;resize:none;padding: 0;border: 0;padding: 5px;box-sizing: border-box;background: #f1efeb;" placeholder="输入文本内容"></textarea>
+                </td>
+                <td width="200px">
+                    结束后延时（秒）：<input style="width: 200px;">
+                </td>
+                <td width="50px">
+                    <button>生成</button>
+                    <button>预览</button>
+                    <button>删除</button>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <button>增加</button>
+    </div>
+</body>
+<script>
+
+    const app = {
+        data() {
+            return {
+                vData:[{},{}]
+            }
+        },
+        methods: {
+            selectFile(item){
+                var file = this.$refs.file.files[0];
+                var data = new FormData();
+				// 创建一个表单数据
+				data.append("file",file);
+                axios({
+                    method: 'POST',
+                    url:"http://localhost:5000/api/file/upload",
+                    data:data,
+                    headers: {'Content-Type': 'multipart/form-data'}
+                })
+                .then(response => {
+                    item.imageUrl = "http://localhost:5000/obj/" + response.data.filename
+                }).catch(function (error) { // 请求失败处理
+                    console.log(error);
+                });
+            }
+        },
+        watch: {
+        },
+        mounted() {
+        }
+    }
+    Vue.createApp(app).mount('#app')
+
+    
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?1985025c6ead5c1cce5d594f1193605a";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+</html>
