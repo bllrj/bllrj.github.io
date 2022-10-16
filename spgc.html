@@ -33,7 +33,11 @@
 
 <body>
     <div id="app">
-        <input type="file" ref="file">
+        <div style="margin: auto; width: 100%; max-width: 1200px;">
+            <input type="file" style="width:100%" ref="file">
+        </div>
+        <br>
+        
         <table style="margin:auto;width: 100%;max-width: 1200px;" border="1">
             <tr>
                 <td>媒体</td>
@@ -42,24 +46,33 @@
                 <td>操作</td>
             </tr>
             <tr v-for="(item,index) in vData" style="height: 200px;">
-                <td width="200px" @click="selectFile(item)">点击选择媒体文件，可选择视频，图片
-                    <img style="width: 100%;" :src="item.imageUrl">
+                <td width="200px" @click="selectFile(item)">
+                    <div v-if="item.imageUrl != null">
+                        <img style="width: 100%;" :src="item.imageUrl">
+                    </div>
+                    <div v-if="item.imageUrl == null">
+                        点击选择图片
+                    </div>
                 </td>
                 <td>
-                    <textarea style="width:100%;height:200px;resize:none;padding: 0;border: 0;padding: 5px;box-sizing: border-box;background: #f1efeb;" placeholder="输入文本内容"></textarea>
+                    <textarea v-model="item.text" style="width:100%;height:200px;resize:none;padding: 0;border: 0;padding: 5px;box-sizing: border-box;background: #f1efeb;" placeholder="输入文本内容"></textarea>
                 </td>
                 <td width="200px">
                     结束后延时（秒）：<input style="width: 200px;">
                 </td>
                 <td width="50px">
-                    <button>生成</button>
+                    <button @click="sc(item)">生成</button>
                     <button>预览</button>
                     <button>删除</button>
                 </td>
             </tr>
         </table>
         <br>
-        <button>增加</button>
+        <div style="margin: auto; width: 100%; max-width: 1200px;">
+            <button>增加</button>
+            <br><br>
+            <button>合并</button>
+        </div>
     </div>
 </body>
 <script>
@@ -71,6 +84,22 @@
             }
         },
         methods: {
+            sc(item){
+                alert(JSON.stringify(item))
+                axios({
+                    method: 'GET',
+                    url:"http://localhost:5000/api/ffmpeg",
+                    params:{
+                        file:item.fileName,
+                        text:item.text
+                    }
+                })
+                .then(response => {
+                    item.imageUrl = "http://localhost:5000/obj/" + response.data.filename
+                }).catch(function (error) { // 请求失败处理
+                    console.log(error);
+                });
+            },
             selectFile(item){
                 var file = this.$refs.file.files[0];
                 var data = new FormData();
@@ -84,6 +113,7 @@
                 })
                 .then(response => {
                     item.imageUrl = "http://localhost:5000/obj/" + response.data.filename
+                    item.fileName =  response.data.filename
                 }).catch(function (error) { // 请求失败处理
                     console.log(error);
                 });
