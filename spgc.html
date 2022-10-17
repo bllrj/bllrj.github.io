@@ -28,6 +28,11 @@
             background: #f1efeb;
             border: 1px solid black;
         }
+        input:disabled{
+border:1px solid rgb(228, 228, 228);
+background-color:rgb(228, 228, 228);
+color:rgb(228, 228, 228);
+}
     </style>
 </head>
 
@@ -58,20 +63,34 @@
                     <textarea v-model="item.text" style="width:100%;height:200px;resize:none;padding: 0;border: 0;padding: 5px;box-sizing: border-box;background: #f1efeb;" placeholder="输入文本内容"></textarea>
                 </td>
                 <td width="200px">
-                    结束后延时（秒）：<input style="width: 200px;">
+                    配音：
+                    <select  disabled style="width: 200px;    width: 200px;
+                    padding: 0px;
+                    margin: 0;
+                    border: 0;">
+                        <option>请选择</option>
+                    </select>
+                    结束后延时（秒）：<input disabled style="width: 200px;    width: 200px;
+                    padding: 0px;
+                    margin: 0;
+                    border: 0;">
                 </td>
                 <td width="50px">
-                    <button @click="sc(item)">生成</button>
+                    <button @click="preview(item)">生成</button>
                     <button @click="openV(item)">预览</button>
-                    <button>删除</button>
+                    <button @click="removeItem(index)">删除</button>
                 </td>
             </tr>
         </table>
         <br>
         <div style="margin: auto; width: 100%; max-width: 1200px;">
-            <button>增加</button>
+            <button @click="addItem()">增加</button>
             <br><br>
-            <button>合并</button>
+            <button @click="merge()">合并</button>
+        </div>
+        <div v-if="zxz" style="position: fixed;top: 0;left: 0; width: 100%;height: 100%;background: #00000030;">
+            <div style="display: flex;height: 100%;color: red;align-items: center;justify-content: space-around;flex-direction: column;">执行中
+            </div>
         </div>
     </div>
 </body>
@@ -80,12 +99,20 @@
     const app = {
         data() {
             return {
-                vData:[{},{}]
+                vData:[{}],
+                zxz:false
             }
         },
         methods: {
-            sc(item){
-                alert(JSON.stringify(item))
+            addItem(){
+                this.vData.push({})
+            },
+            removeItem(index){
+                this.vData.splice(index, 1)
+            },
+            preview(item){
+                this.zxz = true
+                let _this = this
                 axios({
                     method: 'GET',
                     url:"http://localhost:5000/api/ffmpeg",
@@ -93,10 +120,29 @@
                         file:item.fileName,
                         text:item.text
                     }
-                })
-                .then(response => {
+                }).then(response => {
+                    _this.zxz = false
                     item.vp = response.data
+                    window.open("http://localhost:5000/" + item.vp)
                 }).catch(function (error) { // 请求失败处理
+                    _this.zxz = false
+                    console.log(error);
+                });
+            },
+            merge(){
+                this.zxz = true
+                let _this = this
+                axios({
+                    method: 'POST',
+                    url:"http://localhost:5000/api/ffmpeg/merge",
+                    data:{
+                        v: this.vData
+                    }
+                }).then(response => {
+                    _this.zxz = false
+                    window.open("http://localhost:5000/" + response.data)
+                }).catch(function (error) { // 请求失败处理
+                    _this.zxz = false
                     console.log(error);
                 });
             },
