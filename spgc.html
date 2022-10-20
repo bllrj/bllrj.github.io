@@ -45,13 +45,12 @@ color:rgb(228, 228, 228);
         
         <table style="margin:auto;width: 100%;max-width: 1200px;" border="1">
             <tr>
-                <td>媒体</td>
-                <td>文本</td>
-                <td>设置</td>
-                <td>操作</td>
+                <td style="width: 30%;">媒体</td>
+                <td style="width: 60%;">文本</td>
+                <td style="width: 10%;">操作</td>
             </tr>
             <tr v-for="(item,index) in vData" style="height: 200px;">
-                <td width="200px" @click="selectFile(item)">
+                <td @click="selectFile(item)">
                     <div v-if="item.imageUrl != null">
                         <img style="width: 100%;" :src="item.imageUrl">
                     </div>
@@ -62,20 +61,7 @@ color:rgb(228, 228, 228);
                 <td>
                     <textarea v-model="item.text" style="width:100%;height:200px;resize:none;padding: 0;border: 0;padding: 5px;box-sizing: border-box;background: #f1efeb;" placeholder="输入文本内容"></textarea>
                 </td>
-                <td width="200px">
-                    配音：
-                    <select  disabled style="width: 200px;    width: 200px;
-                    padding: 0px;
-                    margin: 0;
-                    border: 0;">
-                        <option>请选择</option>
-                    </select>
-                    结束后延时（秒）：<input disabled style="width: 200px;    width: 200px;
-                    padding: 0px;
-                    margin: 0;
-                    border: 0;">
-                </td>
-                <td width="50px">
+                <td>
                     <button @click="preview(item)">生成</button>
                     <button @click="openV(item)">预览</button>
                     <button @click="removeItem(index)">删除</button>
@@ -123,7 +109,7 @@ color:rgb(228, 228, 228);
                 }).then(response => {
                     _this.zxz = false
                     item.vp = response.data
-                    window.open("http://localhost:5000/" + item.vp)
+                    setTimeout(window.open("http://localhost:5000/" + item.vp), 500);
                 }).catch(function (error) { // 请求失败处理
                     _this.zxz = false
                     console.log(error);
