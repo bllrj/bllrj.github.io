@@ -47,7 +47,7 @@ const app = {
             translation:""
         },
         words:[],
-        text:"",
+        text:null,
         isShow:true
     }
   },
@@ -62,13 +62,19 @@ const app = {
             url:this.selectItem,
         })
         .then(response => {
-            this.words = response.data;
-            var index = Math.floor((Math.random()*this.words.length));
-            this.thisWord = this.words[index];
-            var sound = window.speechSynthesis; // 定义局部变量
-            var read_text = new SpeechSynthesisUtterance(this.thisWord.original); // 实例化
-            sound.speak(read_text); // 朗读
-            document.getElementById("inputName").focus();
+            let ws = response.data;
+            for(let i = 0 ; i < 40 ; i++){
+                var index = Math.floor((Math.random()*ws.length));
+                this.words.push(ws[index])
+                this.words.push(ws[index])
+                this.words.push(ws[index])
+                this.words.push(ws[index])
+                this.words.push(ws[index])
+                this.words.push(ws[index])
+                ws.slice(index,1)
+            }
+            var i = Math.floor((Math.random()*this.words.length));
+            this.text = ''
         }).catch(function (error) { // 请求失败处理
             console.log(error);
         });
@@ -77,15 +83,20 @@ const app = {
   watch: {
     text: {
         handler(newValue, oldValue) {
+            if(this.words.length == 0){
+                alert("休息一下吧！")
+                window.location.reload();
+            }
             let a = true;
             if(newValue == this.thisWord.original){
                 this.i += 1
                 this.c += 1
-                localStorage.setItem("c",this.c)
+                localStorage.setItem("c"+(new Date().getTime()+"").substring(0,8),this.c)
                 var sound = window.speechSynthesis; // 定义局部变量
                 this.isShow = false
                 var index = Math.floor((Math.random()*this.words.length));
-                this.thisWord = this.words[index]
+                this.thisWord = this.words.splice(index,1)[0]
+                console.log(this.words.length)
                 this.text = ""
                 this.isShow = true
                 document.getElementById("inputName").focus()
@@ -104,8 +115,8 @@ const app = {
     if(localStorage.getItem("url") != null){
         this.selectItem = localStorage.getItem("url")
     }
-    if(localStorage.getItem("c") != null){
-        this.c = parseInt(localStorage.getItem("c"))
+    if(localStorage.getItem("c"+(new Date().getTime()+"").substring(0,8)) != null){
+        this.c = parseInt(localStorage.getItem("c"+(new Date().getTime()+"").substring(0,8)))
     }
     this.f();
   }
